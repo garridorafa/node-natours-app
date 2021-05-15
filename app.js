@@ -3,6 +3,8 @@ const fs = require('fs');
 
 const app = express();
 
+app.use(express.json());
+
 const tours = JSON.parse(fs.readFileSync('./dev-data/data/tours-simple.json'));
 
 app.get('/api/v1/tours', (req, res) => {
@@ -13,6 +15,28 @@ app.get('/api/v1/tours', (req, res) => {
       tours,
     },
   });
+});
+
+app.post('/api/v1/tours', (req, res) => {
+  const newId = tours[tours.length - 1].id++;
+  const newTour = {
+    id: newId,
+    ...req.body,
+  };
+
+  tours.push(newTour);
+  fs.writeFile(
+    './dev-data/data/tours-simple.json',
+    JSON.stringify(tours),
+    (err) => {
+      res.status(201).json({
+        status: 'success',
+        data: {
+          tour: newTour,
+        },
+      });
+    }
+  );
 });
 
 const port = 3000;
