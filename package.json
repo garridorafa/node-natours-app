@@ -4,6 +4,7 @@
   "description": "Improving js skills",
   "main": "app.js",
   "scripts": {
+    "start": "npm run dev",
     "dev": "nodemon app.js"
   },
   "author": "Rafa Garrido",
