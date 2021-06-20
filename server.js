@@ -1,13 +1,10 @@
-const dotenv = require('dotenv');
-
-dotenv.config({ path: './config.env' });
+require('dotenv').config({ path: './config.env' });
 
 const mongoose = require('mongoose');
 
 const app = require('./app');
 
 const DB = process.env.DATABASE_LOCAL;
-console.log(DB);
 
 mongoose
   .connect(DB, {
