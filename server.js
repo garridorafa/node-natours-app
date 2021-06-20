@@ -11,13 +11,29 @@ mongoose
     useNewUrlParser: true,
     useCreateIndex: true,
     useFindAndModify: false,
+    useUnifiedTopology: true,
   })
-  .then((con) => {
-    console.log(con.connections);
+  .then(() => {
     console.log('DB connection successful!');
   });
 
-console.log(app.get('env'));
+const tourSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    require: [true, 'A tour must have a name'],
+  },
+  rating: {
+    type: Number,,
+    default: 4.5
+  },
+  price: {
+    type: Number,
+    require: [true, 'A tour must have a price'],
+  },
+});
+
+const Tour = mongoose.model("Tour", tourSchema)
+
 
 const port = process.env.PORT || 3000;
 
