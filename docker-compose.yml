@@ -1,0 +1,16 @@
+version: '3'
+services:
+  node-app:
+    container_name: natursapp
+    build: .
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./src:/app/src
+    links: [mongo]
+
+  mongo:
+    container_name: natursmongo
+    ports:
+      - 27017:27017
+    image: mongo
