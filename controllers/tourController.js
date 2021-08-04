@@ -3,8 +3,8 @@ const APIFeatures = require('../utils/apiFeatures');
 
 exports.aliasTopTours = (req, res, next) => {
   req.query.limit = '5';
-  req.query.sort = '-ratingsAverage,price';
-  req.query.fields = 'name,price,ratingsAverage,summary,difficulty';
+  req.query.sort = '-ratingsAvarage,price';
+  req.query.fields = 'name,price,ratingsAvarage,summary,difficulty';
   next();
 };
 
@@ -100,6 +100,41 @@ exports.deleteTour = async (req, res) => {
     res.status(400).json({
       status: 'fail',
       message: 'Invalid data sent!',
+    });
+  }
+};
+
+exports.getToursStats = async (req, res) => {
+  try {
+    const stats = await Tour.aggregate([
+      {
+        $match: { ratingsAvarage: { $gte: 1 } },
+      },
+      {
+        $group: {
+          _id: { $toUpper: '$difficulty' },
+          numRatings: { $sum: 1 },
+          avgRating: { $avg: '$ratingsAvarage' },
+          avgPrice: { $avg: '$price' },
+          minPrice: { $min: '$price' },
+          maxPrice: { $max: '$price' },
+        },
+      },
+      {
+        $sort: { avgPrice: 1 },
+      },
+    ]);
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        stats,
+      },
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'fail',
+      message: err,
     });
   }
 };
